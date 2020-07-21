@@ -24,7 +24,7 @@ function Get-OldPwdAccounts {
         $ADProperties += "CanonicalName"
         $trusts = @()
         if($AllTrusts){
-            $trusts = Get-AllADDomins
+            $trusts = Get-AllADDomains
         }
         else{
             if($null -eq $Domains){
@@ -175,7 +175,7 @@ function Invoke-Rc4Checks {
         [array]$AccountsToEnrich=$global:RiskyAccounts
     )
     Begin{
-        $trusts = Get-AllADDomins
+        $trusts = Get-AllADDomains
         if(!$OutputCsv.EndsWith(".csv")){
             Write-Warning "Must specify a filename ending in csv, using default"
             $OutputCsv = "rubeus_output.csv"
@@ -243,7 +243,7 @@ function Invoke-SharpHound {
         [string]$OutputDirectory
     )
     Begin{
-        $domains = Get-AllADDomins
+        $domains = Get-AllADDomains
     }
     Process{
         foreach($domain in $domains){
@@ -309,7 +309,7 @@ function Update-BloodhoundOwnedUsers {
     }
 }
 
-function Get-AllADDomins {
+function Get-AllADDomains {
     param()   
     Begin{}
     Process{
