@@ -260,7 +260,7 @@ function Invoke-SharpHound {
 function Update-BloodhoundOwnedUsers {
     param(
         [Parameter(Mandatory=$true,Position=1)]
-        [string]$CrackedAccounts,
+        [array]$CrackedAccounts,
 
         [Parameter(Mandatory=$false,Position=2)]
         [PSCredential]$neo4jCredential,
@@ -285,7 +285,7 @@ function Update-BloodhoundOwnedUsers {
         foreach($account in $CrackedAccounts){
             $user = ($account.SamAccountName.toUpper() + "@" + $account.Domain.toUpper())
             $query = "MATCH (n) WHERE n.name=`"$user`" SET n.owned=true"
-            $body = Convertto-Json @{"statments"=@(@{"statment"=$query})}
+            $body = Convertto-Json @{"statements"=@(@{"statement"=$query})}
             try{
                 Invoke-RestMethod -Method Post -Uri $neo4jUrl -Headers $headers -Body $body | Out-Null
                 $success = $true
@@ -294,7 +294,7 @@ function Update-BloodhoundOwnedUsers {
                 $success = $false
                 $failedAccounts += $user
             }
-            Write-Verbose "User:{0,-50} Status:{1}" -f $user, $success
+            Write-Verbose ("User:{0,-50} Status:{1}" -f $user, $success)
             if(!($i % 250)){
                 Write-Progress -Activity "Marking owned users in BloodHound DB..." -Status "Marked $$i of $($CrackedAccounts.count)" -PercentComplete (($i / $CrackedAccounts.count) * 100)
             }
